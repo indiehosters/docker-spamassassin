@@ -11,12 +11,16 @@ RUN apt-get update \
 RUN sa-update
 
 COPY editconf.py /opt/editconf.py
-RUN chmod u+x /opt/editconf.py
+COPY startup.sh /startup.sh
+
+RUN chmod u+x /opt/editconf.py \
+ && chmod u+x /startup.sh
 
 RUN /opt/editconf.py /etc/default/spamassassin \
     CRON=1
 
 RUN /opt/editconf.py /etc/default/spampd \
+    LISTENHOST=##HOSTNAME## \
     DESTPORT=10026 \
     DESTHOST=dovecot \
     ADDOPTS="\"--maxsize=500\"" \
@@ -27,4 +31,4 @@ RUN /opt/editconf.py /etc/spamassassin/local.cf -s \
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-CMD /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+CMD /startup.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
