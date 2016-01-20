@@ -8,8 +8,6 @@ RUN apt-get update \
       python3 \
  && rm -rf /var/lib/apt/lists/*
 
-RUN sa-update
-
 COPY editconf.py /opt/editconf.py
 COPY startup.sh /startup.sh
 
