@@ -1,18 +1,15 @@
-FROM debian:jessie
+FROM indiehosters/base-email
 
 RUN apt-get update \
  && apt-get install -q -y \
       spamassassin \
       supervisor \
       spampd \
-      python3 \
  && rm -rf /var/lib/apt/lists/*
 
-COPY editconf.py /opt/editconf.py
 COPY startup.sh /startup.sh
 
-RUN chmod u+x /opt/editconf.py \
- && chmod u+x /startup.sh
+RUN chmod u+x /startup.sh
 
 RUN /opt/editconf.py /etc/default/spamassassin \
     CRON=1
